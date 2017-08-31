@@ -3,19 +3,25 @@ services:
   windbreaker:
     build:
       context: ./repos/windbreaker
-      dockerfile: Dockerfile_bundle
     depends_on:
       - postgres
       - rabbitmq
     environment:
       SERVICE_ENVIRONMENT: docker
+    volumes:
+      - ./repos/windbreaker:/usr/windbreaker
+      - /usr/windbreaker/node_modules
+    command: npm start
   rss-watcher:
     build:
       context: ./repos/rss-watcher
-      dockerfile: Dockerfile_bundle
     depends_on:
       - postgres
       - rabbitmq
+    volumes:
+      - ./repos/rss-watcher:/usr/rss-watcher
+      - /usr/rss-watcher/node_modules
+    command: npm start
   postgres:
     image: 'postgres:9.6.3-alpine'
     ports:
@@ -24,4 +30,3 @@ services:
     image: 'rabbitmq:3.6.10-alpine'
     ports:
       - 5672
-
