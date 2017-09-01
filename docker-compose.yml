@@ -22,6 +22,16 @@ services:
       - ./repos/rss-watcher:/usr/rss-watcher
       - /usr/rss-watcher/node_modules
     command: npm start
+  npm-watcher:
+    build:
+      context: ./repos/npm-watcher
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - ./repos/npm-watcher:/usr/npm-watcher
+      - /usr/npm-watcher/node_modules
+    command: npm start
   postgres:
     image: 'postgres:9.6.3-alpine'
     ports:

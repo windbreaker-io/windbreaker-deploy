@@ -1,3 +1,6 @@
 #!/bin/bash
 
-docker-compose up windbreaker rss-watcher
+docker-compose up \
+  windbreaker \
+  rss-watcher \
+  npm-watcher
