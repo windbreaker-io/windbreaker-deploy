@@ -1,37 +1,53 @@
+# Compose file for launching a local windbreaker setup
+
 version: '3'
 services:
   windbreaker:
     build:
       context: ./repos/windbreaker
     depends_on:
-      - postgres
-      - rabbitmq
+      - dependencies
     environment:
       SERVICE_ENVIRONMENT: docker
     volumes:
       - ./repos/windbreaker:/usr/windbreaker
       - /usr/windbreaker/node_modules
+      # uncomment below line as needed to "link" in a local version
+      # the service-util repo. The initial pull will grab it for you
+      #  - ../windbreaker-service-util:/usr/windbreaker/node_modules/windbreaker-service-util
     command: npm start
   rss-watcher:
     build:
       context: ./repos/rss-watcher
     depends_on:
-      - postgres
-      - rabbitmq
+      - dependencies
     volumes:
       - ./repos/rss-watcher:/usr/rss-watcher
       - /usr/rss-watcher/node_modules
+      #  - ../windbreaker-service-util:/usr/rss-watcher/node_modules/windbreaker-service-util
     command: npm start
   npm-watcher:
     build:
       context: ./repos/npm-watcher
     depends_on:
-      - postgres
-      - rabbitmq
+      - dependencies
     volumes:
       - ./repos/npm-watcher:/usr/npm-watcher
       - /usr/npm-watcher/node_modules
+      #  - ../windbreaker-service-util:/usr/npm-watcher/node_modules/windbreaker-service-util
+    environment:
+      SERVICE_ENVIRONMENT: docker
     command: npm start
+
+
+  # a "grouping" container that is here to keep the
+  # compose file a little more dry
+  dependencies:
+    image: tianon/true
+    depends_on:
+      - postgres
+      - rabbitmq
+      - rediscluster
   postgres:
     image: 'postgres:9.6.3-alpine'
     ports:
@@ -40,3 +56,8 @@ services:
     image: 'rabbitmq:3.6.10-alpine'
     ports:
       - 5672
+  rediscluster:
+    image: 'grokzen/redis-cluster'
+    ports:
+      - "7000"
+      - "7001"
