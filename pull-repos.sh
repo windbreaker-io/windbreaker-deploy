@@ -1,8 +1,9 @@
 #!/bin/bash
 
 pull () {
-  if [ cd repo; ] then
-    git pull && cd ../;
+  pushd repos/$1;
+  if [ $? == 0 ]; then
+    git pull && popd;
   else
     git clone git@github.com:windbreaker-io/$1 repos/$1;
   fi
