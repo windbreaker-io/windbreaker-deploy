@@ -14,7 +14,20 @@ services:
       - /usr/windbreaker/node_modules
       # uncomment below line as needed to "link" in a local version
       # the service-util repo. The initial pull will grab it for you
-      #  - ../windbreaker-service-util:/usr/windbreaker/node_modules/windbreaker-service-util
+      # - ../windbreaker-service-util:/usr/windbreaker/node_modules/windbreaker-service-util
+  windbreaker-hooks:
+    build:
+      context: ./repos/windbreaker-hooks
+    depends_on:
+      - dependencies
+    environment:
+      SERVICE_ENVIRONMENT: docker
+    ports:
+      - 8080:8080
+    volumes:
+      - ./repos/windbreaker-hooks:/usr/windbreaker-hooks
+      - /usr/windbreaker-hooks/node_modules
+      # - ../windbreaker-service-util:/usr/windbreaker-hooks/node_modules/windbreaker-service-util
     command: npm start
   rss-watcher:
     build:
@@ -53,9 +66,10 @@ services:
     ports:
       - 5432
   rabbitmq:
-    image: 'rabbitmq:3.6.10-alpine'
+    image: 'rabbitmq:3.6.12-management'
     ports:
       - 5672
+      - 15672:15672 # management port. guest/guest
   rediscluster:
     image: 'grokzen/redis-cluster'
     ports:
