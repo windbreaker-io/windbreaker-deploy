@@ -15,6 +15,7 @@ services:
       # uncomment below line as needed to "link" in a local version
       # the service-util repo. The initial pull will grab it for you
       # - ../windbreaker-service-util:/usr/windbreaker/node_modules/windbreaker-service-util
+    command: npm start
   windbreaker-hooks:
     build:
       context: ./repos/windbreaker-hooks
