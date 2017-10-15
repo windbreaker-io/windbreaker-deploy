@@ -64,6 +64,13 @@ services:
       - rediscluster
   postgres:
     image: 'postgres:9.6.3-alpine'
+    # Additional initialization, see 'extending' https://hub.docker.com/_/postgres/
+    volumes:
+      - ./docker-helpers/postgres:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DATABASES: 'windbreaker_core,windbreaker_hooks'
     ports:
       - 5432
   rabbitmq:
